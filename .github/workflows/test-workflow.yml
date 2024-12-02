@@ -1,4 +1,4 @@
-name: Python application test
+name: Automated Testing
 
 on:
   push:
@@ -10,44 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: Set Up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.x'
 
-    - name: Install dependencies
-      run: |
-        python3 -m venv venv
-        source venv/bin/activate
-        # If you have a requirements.txt file, use this to install dependencies:
-        # pip install -r requirements.txt
+    - name: Install Dependencies
+      run: pip install --upgrade pip
 
-    - name: Run the test
+    - name: Run Test 1
       run: |
-        # Run the Python script with the input file
-        python3 find_lowest_number.py test_data/test1_input.txt output1.txt
-        
-        # Normalize output by removing `.0` from floating-point numbers
-        sed -i 's/\.0$//' output1.txt
-        
-        # Compare the output with the expected output
+        python find_lowest_number.py test_data/test1_input.txt output1.txt
         diff output1.txt test_data/test1_expected.txt
 
-    - name: Debug Test Output
+    - name: Run Test 2
       run: |
-        echo "Output file contents:"
-        cat output1.txt
-
-    - name: Run tests for all cases
-      run: |
-        # Repeat for other test cases (test2_input.txt, test3_input.txt, etc.)
-        python3 find_lowest_number.py test_data/test2_input.txt output2.txt
-        sed -i 's/\.0$//' output2.txt
+        python find_lowest_number.py test_data/test2_input.txt output2.txt
         diff output2.txt test_data/test2_expected.txt
-        
-        python3 find_lowest_number.py test_data/test3_input.txt output3.txt
-        sed -i 's/\.0$//' output3.txt
+
+    - name: Run Test 3
+      run: |
+        python find_lowest_number.py test_data/test3_input.txt output3.txt
         diff output3.txt test_data/test3_expected.txt
